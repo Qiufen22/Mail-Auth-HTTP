@@ -26,7 +26,7 @@
 ├── 并发.py           # 并发压测脚本
 ```
 
-## 简单结构图
+## 简单架构图
 
 <img width="761" height="429" alt="image" src="https://github.com/user-attachments/assets/ec244afb-8b58-4c7f-b0ba-8e489c6f02ba" />
 
@@ -86,3 +86,4 @@ MIT
 
 
 如有问题欢迎联系或提交
+
