@@ -28,7 +28,8 @@
 
 ## 简单架构图
 
-<img width="761" height="429" alt="image" src="https://github.com/user-attachments/assets/ec244afb-8b58-4c7f-b0ba-8e489c6f02ba" />
+<img width="760" height="432" alt="image" src="https://github.com/user-attachments/assets/1eff1837-8883-42dc-93e6-ff28c7d0b443" />
+
 
 ## 快速开始
 
@@ -86,4 +87,5 @@ MIT
 
 
 如有问题欢迎联系或提交
+
 
