@@ -63,9 +63,27 @@
 
    ```
    mail {
-       auth_http 127.0.0.1:8089/mail/auth;
-       ...
-   }
+    error_log  /var/log/nginx/mail_error.log info;
+
+    server {
+        listen     110;
+        protocol   pop3;
+        auth_http  127.0.0.1:8089/mail/auth;
+    }
+
+    server {
+        listen     143;
+        protocol   imap;
+        auth_http  127.0.0.1:8089/mail/auth;
+    }
+
+    server {
+        listen     587;
+        protocol   smtp;
+        smtp_auth  plain login cram-md5;
+        auth_http  127.0.0.1:8089/mail/auth;
+    }
+}
    ```
 
 ## 认证流程说明
@@ -87,5 +105,6 @@ MIT
 
 
 如有问题欢迎联系或提交
+
 
 
