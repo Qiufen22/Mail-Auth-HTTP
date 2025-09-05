@@ -193,8 +193,14 @@ chmod +x mailgateway
 ```yaml
 # 服务器配置
 server:
-  port: ":8089"              # 服务端口
-  mode: "debug"              # 运行模式: debug/release/test
+  host: "0.0.0.0"  # 监听地址: 127.0.0.1(本地) 或 0.0.0.0(所有接口)
+  port: "8089"        # 管理服务监听端口
+  mode: "debug"       # debug, release, test
+
+# Nginx认证服务配置
+auth_server:
+  host: "127.0.0.1"   # 认证服务监听地址，强制本地访问
+  port: "8090"        # 认证服务监听端口
 
 # 数据库配置
 database:
@@ -241,8 +247,21 @@ log:
 
 1. **标准认证**: 用户名 + 密码
 2. **TOTP 认证**: 用户名 + 密码 + 6位验证码（附加在密码末尾）
-3. **失败处理**: 超过最大失败次数自动锁定账户
+3. **失败处理**: 支持登录失败计数与锁定策略（由 system_config 控制）
 4. **缓存机制**: 成功认证后缓存密码 5 分钟
+
+### 管理员登录与安全策略
+
+- 接口地址：`POST /login`
+- 请求参数：`username`、`password`、`totp_code`（可选，开启TOTP后需提供）
+- 错误信息：为防止信息泄露，触发TOTP后的所有错误均统一返回“登录失败”
+- 失败计数：密码错误、TOTP验证码错误均计入失败次数
+- 锁定策略（system_config 配置）：
+  - `LOCKED`：是否启用账户锁定（true/false）
+  - `LOCK_ERRORS`：触发锁定的失败次数阈值（默认 5 次）
+  - `LOCK_TIME`：锁定时长（分钟，默认 30）
+- 锁定期间：该管理员账户将被拒绝登录
+- 成功登录：自动清除失败计数与锁定标记，并记录完整操作日志
 
 ## Nginx 集成
 
@@ -251,7 +270,7 @@ log:
 ```nginx
 mail {
     server_name mail.example.com;
-    auth_http http://localhost:8089/auth;
+    auth_http http://127.0.0.1:8090/api/auth;
     auth_http_header User-Agent "Nginx";
     
     server {
