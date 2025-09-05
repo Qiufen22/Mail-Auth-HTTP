@@ -92,6 +92,33 @@ MailGateway/
 
 ## 快速开始
 
+### Docker 直接拉取镜像部署（不改配置）
+
+适用场景：
+- 不修改 conf/config.yaml（保留 auth_server.host=127.0.0.1）
+- Linux 环境（使用 host 网络）
+
+命令：
+```bash
+sudo docker pull qiufen22/mailgateway:latest
+
+sudo mkdir -p /opt/mailgateway/conf/logs
+# 请将你的 config.yaml 放到 /opt/mailgateway/conf/config.yaml
+# sudo cp /path/to/config.yaml /opt/mailgateway/conf/config.yaml
+
+sudo docker run -d --name mailgateway \
+  --network host \
+  -e GIN_MODE=release \
+  -v /opt/mailgateway/conf:/app/conf:ro \
+  -v /opt/mailgateway/conf/logs:/app/logs:rw \
+  --restart unless-stopped \
+  qiufen22/mailgateway:latest
+```
+
+验证：
+- 管理端：http://0.0.0.0:8089
+- 认证接口：http://127.0.0.1:8090/api/auth
+
 ### 环境要求
 - Go 1.19+
 - MySQL 8.0+
