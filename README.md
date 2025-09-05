@@ -97,42 +97,91 @@ MailGateway/
 - MySQL 8.0+
 - Redis 6.0+
 
-### 安装步骤
+### 安装与部署
 
-1. **克隆项目**
+#### 方式一：本地编译安装部署（推荐用于开发环境）
+- 前置要求：Go 1.24+、MySQL 8.0+、Redis 6.0+
+
+1. 克隆项目
 ```bash
 git clone <repository-url>
 cd MailGateway
 ```
 
-2. **安装依赖**
+2. 安装依赖
 ```bash
 go mod download
 ```
 
-3. **配置数据库和 Redis**
-编辑 `conf/config.yaml` 文件，配置数据库和 Redis 连接信息：
-```yaml
-database:
-  host: "localhost"
-  port: "3306"
-  user: "root"
-  password: "your_password"
-  database: "mail"
+3. 配置应用
+- 编辑 `conf/config.yaml`，按“配置说明”章节完善数据库和 Redis 参数
 
-redis:
-  host: "localhost"
-  port: "6379"
-  password: "your_redis_password"
-  db: 0
-```
-
-4. **启动应用**
+4. 编译与运行
 ```bash
-go run main.go
+# 编译
+mkdir -p bin
+go build -o bin/mailgateway .
+
+# 运行（Linux/macOS）
+./bin/mailgateway
+# Windows
+# .\\bin\\mailgateway.exe
+```
+应用启动后访问：`http://localhost:8089`
+
+---
+
+#### 方式二：Docker 安装部署（推荐用于快速试用/生产）
+- 前置要求：Docker、Docker Compose
+
+1. 使用脚本快速启动
+```bash
+chmod +x docker-start.sh
+./docker-start.sh
+```
+或手动执行：
+```bash
+docker compose up --build -d
+# 旧版本请使用：docker-compose up --build -d
 ```
 
-应用将在 `http://localhost:8089` 启动。
+2. 查看日志/管理服务
+```bash
+docker compose logs -f mailgateway
+# 停止：docker compose down
+# 重启：docker compose restart
+```
+
+3. 更多部署细节与故障排除
+- 请参见项目根目录下的 DOCKER.md
+- 如遇 `./logs` 目录写入权限问题，可在宿主机执行（Linux）：
+```bash
+sudo chown -R 1001:1001 logs
+# 或临时方案（仅测试环境）：sudo chmod -R 777 logs
+```
+
+---
+
+#### 方式三：二进制文件下载部署（无需本地编译）
+- 前置要求：MySQL 8.0+、Redis 6.0+
+
+1. 下载与解压
+- 从项目的发布页下载与你平台匹配的压缩包（例如：`mailgateway_<version>_<os>_<arch>.tar.gz/zip`）
+- 解压到目标目录
+
+2. 配置应用
+- 编辑 `conf/config.yaml`，按“配置说明”章节完善数据库和 Redis 参数
+
+3. 直接运行
+```bash
+# Linux/macOS
+chmod +x mailgateway
+./mailgateway
+
+# Windows
+# .\\mailgateway.exe
+```
+应用启动后访问：`http://localhost:8089`
 
 ### 默认账户
 - **管理员账户**: admin / admin123
