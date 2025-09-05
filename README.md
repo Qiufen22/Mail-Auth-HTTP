@@ -92,10 +92,9 @@ MailGateway/
 
 ## 快速开始
 
-### Docker 直接拉取镜像部署（不改配置）
+### Docker 直接拉取镜像部署
 
 适用场景：
-- 不修改 conf/config.yaml（保留 auth_server.host=127.0.0.1）
 - Linux 环境（使用 host 网络）
 
 命令：
